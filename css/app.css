@@ -8,3 +8,8 @@
 h1 {
   font-size: 2em;
 }
+
+.user-img {
+  height: 5em;
+  width: 5em;
+}
