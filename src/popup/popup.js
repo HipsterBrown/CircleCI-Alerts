@@ -1,3 +1,8 @@
+// document.addEventListener('DOMContentLoaded', function(){
+//   chrome.extension.getBackgroundPage().init();
+// });
+
+
 var D = React.DOM;
 
 var App = React.createClass({
@@ -15,6 +20,4 @@ var App = React.createClass({
   }
 });
 
-window.init = function() {
-  React.render(React.createElement(App, null), document.getElementById("mainPopup"));
-};
+React.render(React.createElement(App, null), document.getElementById("mainPopup"));

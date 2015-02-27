@@ -1,0 +1,22 @@
+{
+  "name": "circleci-alerts-ext",
+  "version": "0.1.0",
+  "description": "A simple chrome extension for CircleCI users to be notified of their latest build status",
+  "main": " ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HipsterBrown/CircleCI-Alerts.git"
+  },
+  "author": "HipsterBrown",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HipsterBrown/CircleCI-Alerts/issues"
+  },
+  "homepage": "https://github.com/HipsterBrown/CircleCI-Alerts",
+  "devDependencies": {
+    "react": "^0.12.2"
+  }
+}
