@@ -1,57 +1,30 @@
-// chrome.alarms.create('notificationAlarm', {
-//   when: 1,
-//   periodInMinutes: 1
-// });
-//
-// chrome.alarms.onAlarm.addListener(function(alarm){
-//   console.log(alarm.name + " fired every " + alarm.scheduledTime);
-//   chrome.notifications.create(new Date().toTimeString(), {
-//     type: "basic",
-//     iconUrl: "../../icons/icon128.png",
-//     title: "Latest Notication",
-//     message: "This is the latest update notification from the event page. " + new Date().toTimeString()
-//   }, function(id){
-//     console.log(id);
-//   });
-// });
+chrome.alarms.create('notificationAlarm', {
+  when: 1,
+  periodInMinutes: 1
+});
 
 var baseUrl = "https://circleci.com/api/v1/";
-
-var fetchMe = fetch(baseUrl + "me", {
-  method: "get",
-  headers: {
-    "Accept": "application/json"
-  }
-})
-.then(function(response){
-  return response.json();
-})
-.catch(function(err){
-  console.warn(err);
-});
-
-var fetchProjects = fetch(baseUrl + "projects", {
-  method: "get",
-  headers: {
-    "Accept": "application/json"
-  }
-})
-.then(function(response){
-  return response.json();
-})
-.catch(function(err){
-  console.warn(err);
-});
 
 var D = React.DOM;
 
 var Branch = React.createClass({
   displayName: 'Branch',
+  triggerNotify: function(){
+      chrome.notifications.create(new Date().toTimeString(), {
+        type: "basic",
+        iconUrl: "../../icons/icon128.png",
+        title: "New Running Project",
+        message: new Date().toTimeString()
+      }, function(id){
+        console.log(id);
+      });
+  },
   getClasses: function(){
     var classArr = ['branch'];
 
     if(this.props.data.running_builds.length) {
       classArr.push('running');
+      this.triggerNotify();
     } else {
       classArr.push(this.props.data.recent_builds[0].outcome);
     }
@@ -143,36 +116,83 @@ var ProjectList = React.createClass({
 
 var App = React.createClass({
   displayName: 'App',
+  getInitialState: function(){
+    return {
+      me: {
+        name: "Sir Rando",
+        avatar_url: "http://placekitten.com/g/150/150"
+      },
+      projects: []
+    };
+  },
+  componentDidMount: function(){
+    this.fetchMe();
+    this.fetchProjects();
+
+    chrome.alarms.onAlarm.addListener(this.fetchProjects);
+  },
+  fetchMe: function(){
+    var self = this;
+    console.log("Fetching projects...");
+    fetch(baseUrl + "me", {
+      method: "get",
+      headers: {
+        "Accept": "application/json"
+      }
+    })
+    .then(function(response){
+      return response.json();
+    })
+    .then(function(json){
+      self.setState({
+        me: json
+      });
+    })
+    .catch(function(err){
+      console.warn(err);
+    });
+  },
+  fetchProjects: function(){
+    var self = this;
+
+    fetch(baseUrl + "projects", {
+      method: "get",
+      headers: {
+        "Accept": "application/json"
+      }
+    })
+    .then(function(response){
+      return response.json();
+    })
+    .then(function(json){
+      self.setState({
+        projects: json
+      });
+    })
+    .catch(function(err){
+      console.warn(err);
+    });
+  },
   render: function(){
     return D.div({
       className: "app"
     }, [
       D.h1({
         className: "app-header"
-      }, "Hello " + this.props.me.name + "!"),
+      }, "Hello " + this.state.me.name + "!"),
       D.img({
         className: "user-img",
-        src: this.props.me.avatar_url
+        src: this.state.me.avatar_url
       }),
       D.h2({}, "Your Projects"),
       React.createElement(ProjectList, {
-        projects: this.props.projects,
-        me: this.props.me.login
+        projects: this.state.projects,
+        me: this.state.me.login
       })
     ]);
   }
 });
 
 var init = function(doc){
-  Promise.all([fetchMe, fetchProjects])
-  .then(function(values){
-    React.render(React.createElement(App, {
-      me: values[0],
-      projects: values[1]
-    }), doc.getElementById("mainPopup"));
-
-  })
-  .catch(function(err){
-    console.warn(err);
-  });
+  React.render(React.createElement(App, null), doc.getElementById("mainPopup"));
 };
