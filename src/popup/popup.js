@@ -32,7 +32,26 @@ var fetchProjects = fetch(baseUrl + "projects", {
 
 var D = React.DOM;
 
+var Branch = React.createClass({
+  displayName: 'Branch',
+  getClasses: function(){
+    var classArr = ['branch'];
+
+    classArr.push(this.props.data.recent_builds[0].outcome);
+
+    return classArr.join(' ');
+  },
+  render: function(){
+    var classes = this.getClasses();
+    console.log(this.props.data);
+    return D.li({
+      className: classes
+    }, this.props.name);
+  }
+});
+
 var BranchList = React.createClass({
+  displayName: 'BranchList',
   matchMe: function(logins, me) {
     return logins.some(function(login){
       return login === me;
@@ -40,23 +59,21 @@ var BranchList = React.createClass({
   },
   getBranches: function(){
     var self = this;
+    var tempBranches = [];
     var branches = [];
 
     for (var branch in this.props.branches) {
 
       if ( this.props.branches.hasOwnProperty(branch) ){
         var branchObj = this.props.branches[branch];
+        branchObj.name = decodeURIComponent(branch);
 
         if(branchObj.hasOwnProperty("pusher_logins")) {
           var logins = branchObj.pusher_logins;
           var me = self.props.me;
 
           if( self.matchMe(logins, me) ) {
-            branches.push(
-              D.li({
-                className: "branch"
-              }, decodeURIComponent(branch) )
-            );
+            tempBranches.push(branchObj);
           }
 
         }
@@ -64,6 +81,21 @@ var BranchList = React.createClass({
       }
 
     }
+
+    tempBranches.sort(function(a, b){
+      return new Date(b.recent_builds[0].pushed_at) - new Date(a.recent_builds[0].pushed_at);
+    });
+
+    tempBranches.forEach(function(branch){
+      branches.push(
+        React.createElement(Branch, {
+          data: branch,
+          name: branch.name
+        })
+      );
+    });
+
+    console.log(tempBranches);
 
     return branches;
   },
@@ -76,6 +108,7 @@ var BranchList = React.createClass({
 });
 
 var ProjectList = React.createClass({
+  displayName: 'ProjectList',
   render: function(){
     return D.ul({
       className: "project-list"
@@ -83,7 +116,7 @@ var ProjectList = React.createClass({
       return D.li({
         className: "project"
       }, [
-        D.p({}, project.reponame + " has many branches."),
+        D.p({}, project.reponame + " has many branches. Here are yours:"),
         React.createElement(BranchList, {
           branches: project.branches,
           me: this.props.me
@@ -94,6 +127,7 @@ var ProjectList = React.createClass({
 });
 
 var App = React.createClass({
+  displayName: 'App',
   render: function(){
     return D.div({
       className: "app"
@@ -116,11 +150,12 @@ var App = React.createClass({
 
 Promise.all([fetchMe, fetchProjects])
 .then(function(values){
-  console.log(values[0]);
+  console.log(values[1]);
   React.render(React.createElement(App, {
     me: values[0],
     projects: values[1]
   }), document.getElementById("mainPopup"));
+
 })
 .catch(function(err){
   console.warn(err);
