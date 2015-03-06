@@ -33,16 +33,42 @@ var fetchProjects = fetch(baseUrl + "projects", {
 var D = React.DOM;
 
 var BranchList = React.createClass({
-  render: function(){
+  matchMe: function(logins, me) {
+    return logins.some(function(login){
+      return login === me;
+    });
+  },
+  getBranches: function(){
+    var self = this;
     var branches = [];
+
     for (var branch in this.props.branches) {
+
       if ( this.props.branches.hasOwnProperty(branch) ){
         var branchObj = this.props.branches[branch];
+
         if(branchObj.hasOwnProperty("pusher_logins")) {
-          branches.push(D.li({className: "branch"}, decodeURIComponent(branch) + " - " + branchObj.pusher_logins[0] ) );
+          var logins = branchObj.pusher_logins;
+          var me = self.props.me;
+
+          if( self.matchMe(logins, me) ) {
+            branches.push(
+              D.li({
+                className: "branch"
+              }, decodeURIComponent(branch) )
+            );
+          }
+
         }
+
       }
+
     }
+
+    return branches;
+  },
+  render: function(){
+    var branches = this.getBranches();
     return D.ul({
       className: "branch-list"
     }, branches);
@@ -59,7 +85,8 @@ var ProjectList = React.createClass({
       }, [
         D.p({}, project.reponame + " has many branches."),
         React.createElement(BranchList, {
-          branches: project.branches
+          branches: project.branches,
+          me: this.props.me
         })
       ]);
     }, this));
@@ -80,7 +107,8 @@ var App = React.createClass({
       }),
       D.h2({}, "Your Projects"),
       React.createElement(ProjectList, {
-        projects: this.props.projects
+        projects: this.props.projects,
+        me: this.props.me.login
       })
     ]);
   }
@@ -88,7 +116,7 @@ var App = React.createClass({
 
 Promise.all([fetchMe, fetchProjects])
 .then(function(values){
-  console.log(values[1]);
+  console.log(values[0]);
   React.render(React.createElement(App, {
     me: values[0],
     projects: values[1]
