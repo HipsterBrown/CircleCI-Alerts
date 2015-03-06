@@ -13,6 +13,7 @@
   "background": {
     "scripts": [
       "vendor/react.js",
+      "vendor/fetch.js",
       "src/bg/background.js"
     ],
     "persistent": false
@@ -27,6 +28,7 @@
   },
   "permissions": [
     "notifications",
+    "alarms",
     "https://circleci.com/*"
   ]
 }
