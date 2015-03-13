@@ -104,12 +104,18 @@ var Branch = React.createClass({
   openTab: function(e){
     if (e.preventDefault) {
       e.preventDefault();
+      chrome.tabs.create({
+        url: this.getBuildURL(),
+        active: false
+      });
+    }
+    if (typeof e === "string") {
+      chrome.tabs.create({
+        url: this.getBuildURL(e),
+        active: false
+      });
     }
 
-    chrome.tabs.create({
-      url: this.getBuildURL(),
-      active: false
-    });
   },
   getClasses: function(){
     var classArr = ['branch'];
@@ -124,15 +130,19 @@ var Branch = React.createClass({
 
     return classArr.join(' ');
   },
-  getBuildURL: function(){
+  getBuildURL: function(id){
     var baseURL = this.props.projectURL + '/';
-    if(this.props.data.running_builds.length) {
-      baseURL += this.props.data.running_builds[0].build_num;
+    var buildNum;
+
+    if(id) {
+      buildNum = id.split('-')[1];
+    } else if(this.props.data.running_builds.length) {
+      buildNum = this.props.data.running_builds[0].build_num;
     } else {
-      baseURL += this.props.data.recent_builds[0].build_num;
+      buildNum = this.props.data.recent_builds[0].build_num;
     }
 
-    return baseURL;
+    return baseURL + "/" + buildNum;
   },
   render: function(){
     var classes = this.getClasses();
