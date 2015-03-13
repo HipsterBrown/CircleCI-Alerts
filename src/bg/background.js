@@ -14,9 +14,16 @@ var Branch = React.createClass({
       running: false
     };
   },
+  componentWillReceiveProps: function(nextProps){
+    if(nextProps.data.running_builds.length) {
+      this.setState({running: true});
+    } else {
+      this.setState({running: false});
+    }
+  },
   componentDidUpdate: function(prevProps, prevState){
     var self = this;
-    if (!this.state.running && prevState.running) {
+    if (!self.state.running && prevState.running) {
       switch(self.props.data.recent_builds[0].outcome) {
         case "success":
           self.notifySuccess(self.props.data.recent_builds[0]);
@@ -65,18 +72,12 @@ var Branch = React.createClass({
   getClasses: function(){
     var classArr = ['branch'];
 
-    if(this.props.data.running_builds.length) {
+    if(this.state.running) {
       classArr.push('running');
       this.notifyBuild(this.props.data.running_builds[0]);
-      this.setState({
-        running: true
-      });
       console.log('Running Build:', this.props.data.running_builds);
     } else {
       classArr.push(this.props.data.recent_builds[0].outcome);
-      this.setState({
-        running: false
-      });
     }
 
     return classArr.join(' ');
