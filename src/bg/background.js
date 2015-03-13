@@ -91,6 +91,12 @@ var Branch = React.createClass({
       }
     });
   },
+  openTab: function(e){
+    e.preventDefault();
+    var url = e.target.href;
+
+    chrome.tabs.create({url: url});
+  },
   getClasses: function(){
     var classArr = ['branch'];
 
@@ -104,6 +110,16 @@ var Branch = React.createClass({
 
     return classArr.join(' ');
   },
+  getBuildURL: function(){
+    var baseURL = this.props.projectURL + '/';
+    if(this.props.data.running_builds.length) {
+      baseURL += this.props.data.running_builds[0].build_num;
+    } else {
+      baseURL += this.props.data.recent_builds[0].build_num;
+    }
+
+    return baseURL;
+  },
   render: function(){
     var classes = this.getClasses();
     console.log(this.props.data);
@@ -112,7 +128,8 @@ var Branch = React.createClass({
       className: classes
     }, [
       D.a({
-        href: this.props.projectURL + '/' + this.props.data.recent_builds[0].build_num
+        href: this.getBuildURL(),
+        onClick: this.openTab
       }, this.props.name)
     ]);
   }
