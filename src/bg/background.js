@@ -9,7 +9,7 @@ var D = React.DOM;
 
 var Branch = React.createClass({
   displayName: 'Branch',
-  triggerNotify: function(){
+  notifyBuild: function(data){
       chrome.notifications.create(new Date().toTimeString(), {
         type: "basic",
         iconUrl: "../../icons/icon128.png",
@@ -24,7 +24,7 @@ var Branch = React.createClass({
 
     if(this.props.data.running_builds.length) {
       classArr.push('running');
-      this.triggerNotify();
+      this.notifyBuild(this.props.data.running_builds);
     } else {
       classArr.push(this.props.data.recent_builds[0].outcome);
     }
@@ -33,6 +33,7 @@ var Branch = React.createClass({
   },
   render: function(){
     var classes = this.getClasses();
+    console.log(this.props.data);
 
     return D.li({
       className: classes
@@ -165,6 +166,7 @@ var App = React.createClass({
       return response.json();
     })
     .then(function(json){
+      console.log(json);
       self.setState({
         projects: json
       });
