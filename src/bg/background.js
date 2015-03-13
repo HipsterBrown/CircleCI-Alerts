@@ -42,7 +42,7 @@ var Branch = React.createClass({
   },
   notifySuccess: function(data){
     var self = this;
-    chrome.notifications.create(self.props.name, {
+    chrome.notifications.create(self.props.name + "-" + data.build_num, {
       type: "basic",
       iconUrl: "../../icons/success128.png",
       title: "Success!",
@@ -59,7 +59,7 @@ var Branch = React.createClass({
   },
   notifyFailed: function(data){
     var self = this;
-    chrome.notifications.create(self.props.name, {
+    chrome.notifications.create(self.props.name + "-" + data.build_num, {
       type: "basic",
       iconUrl: "../../icons/failure128.png",
       title: "Failed Tests :(",
@@ -76,7 +76,7 @@ var Branch = React.createClass({
   },
   notifyBuild: function(data){
     var self = this;
-    chrome.notifications.create(self.props.name, {
+    chrome.notifications.create(self.props.name + "-" + data.build_num, {
       type: "basic",
       iconUrl: "../../icons/running128.png",
       title: "New Running Build",
@@ -95,7 +95,7 @@ var Branch = React.createClass({
     e.preventDefault();
     var url = e.target.href;
 
-    chrome.tabs.create({url: url});
+    chrome.tabs.create({url: this.getBuildURL()});
   },
   getClasses: function(){
     var classArr = ['branch'];
@@ -122,7 +122,6 @@ var Branch = React.createClass({
   },
   render: function(){
     var classes = this.getClasses();
-    console.log(this.props.data);
 
     return D.li({
       className: classes
