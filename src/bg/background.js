@@ -103,7 +103,10 @@ var Branch = React.createClass({
     e.preventDefault();
     var url = e.target.href;
 
-    chrome.tabs.create({url: this.getBuildURL()});
+    chrome.tabs.create({
+      url: this.getBuildURL(),
+      active: false
+    });
   },
   getClasses: function(){
     var classArr = ['branch'];
