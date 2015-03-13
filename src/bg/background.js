@@ -110,6 +110,7 @@ var Branch = React.createClass({
       });
     }
     if (typeof e === "string") {
+      console.log("From clicked...", e);
       chrome.tabs.create({
         url: this.getBuildURL(e),
         active: false
@@ -142,7 +143,7 @@ var Branch = React.createClass({
       buildNum = this.props.data.recent_builds[0].build_num;
     }
 
-    return baseURL + "/" + buildNum;
+    return baseURL + buildNum;
   },
   render: function(){
     var classes = this.getClasses();
