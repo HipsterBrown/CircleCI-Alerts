@@ -48,8 +48,7 @@ var Branch = React.createClass({
   },
   notifySuccess: function(data){
     var self = this;
-    chrome.notifications.create(self.props.name + "-" + data.build_num, {
-      type: "basic",
+    chrome.notifications.update(self.props.name + "-" + data.build_num, {
       iconUrl: "../../icons/success128.png",
       title: "Success!",
       message: "The tests for your latest build for the " + self.props.name + " branch have passed, so congrats!"
@@ -65,8 +64,7 @@ var Branch = React.createClass({
   },
   notifyFailed: function(data){
     var self = this;
-    chrome.notifications.create(self.props.name + "-" + data.build_num, {
-      type: "basic",
+    chrome.notifications.update(self.props.name + "-" + data.build_num, {
       iconUrl: "../../icons/failure128.png",
       title: "Failed Tests :(",
       message: "Looks like there was a failed test in the latest build for the " + self.props.name + " branch.",
