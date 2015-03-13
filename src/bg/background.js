@@ -44,33 +44,51 @@ var Branch = React.createClass({
     var self = this;
     chrome.notifications.create(self.props.name, {
       type: "basic",
-      iconUrl: "../../icons/icon128.png",
+      iconUrl: "../../icons/success128.png",
       title: "Success!",
       message: "The tests for your latest build for the " + self.props.name + " branch have passed, so congrats!"
     }, function(id){
       console.log(id);
+    });
+    chrome.browserAction.setIcon({
+      path: {
+        '19': '../../icons/success19.png',
+        '38': '../../icons/success38.png'
+      }
     });
   },
   notifyFailed: function(data){
     var self = this;
     chrome.notifications.create(self.props.name, {
       type: "basic",
-      iconUrl: "../../icons/icon128.png",
+      iconUrl: "../../icons/failed128.png",
       title: "Failed Tests :(",
       message: "Looks like there was a failed test in the latest build for the " + self.props.name + " branch."
     }, function(id){
       console.log(id);
+    });
+    chrome.browserAction.setIcon({
+      path: {
+        '19': '../../icons/failed19.png',
+        '38': '../../icons/failed38.png'
+      }
     });
   },
   notifyBuild: function(data){
     var self = this;
     chrome.notifications.create(self.props.name, {
       type: "basic",
-      iconUrl: "../../icons/icon128.png",
+      iconUrl: "../../icons/running128.png",
       title: "New Running Build",
       message: "A new build has started for the " + self.props.name + " branch."
     }, function(id){
       console.log(id);
+    });
+    chrome.browserAction.setIcon({
+      path: {
+        '19': '../../icons/running19.png',
+        '38': '../../icons/running38.png'
+      }
     });
   },
   getClasses: function(){
