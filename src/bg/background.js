@@ -17,6 +17,7 @@ var Branch = React.createClass({
   componentWillReceiveProps: function(nextProps){
     console.log(nextProps);
     if(nextProps.data.running_builds.length) {
+      console.log("Build Running...", nextProps);
       this.setState({running: true});
     } else {
       this.setState({running: false});
@@ -25,6 +26,7 @@ var Branch = React.createClass({
   componentDidUpdate: function(prevProps, prevState){
     var self = this;
     if (!self.state.running && prevState.running) {
+      console.log("Build over", self.state, prevState);
       switch(self.props.data.recent_builds[0].outcome) {
         case "success":
           self.notifySuccess(self.props.data.recent_builds[0]);
