@@ -9,25 +9,74 @@ var D = React.DOM;
 
 var Branch = React.createClass({
   displayName: 'Branch',
+  getInitialState: function(){
+    return {
+      running: false
+    };
+  },
+  componentDidUpdate: function(prevProps, prevState){
+    var self = this;
+    if (!this.state.running && prevState.running) {
+      switch(self.props.data.recent_builds[0].outcome) {
+        case "success":
+          self.notifySuccess(self.props.data.recent_builds[0]);
+          break;
+        case "failed":
+          self.notifyFailed(self.props.data.recent_builds[0]);
+          break;
+        default:
+          console.log("Something else happened:", self.props.data.recent_builds[0].outcome);
+      }
+    }
+  },
+  notifySuccess: function(data){
+    var self = this;
+    chrome.notifications.create(self.props.name, {
+      type: "basic",
+      iconUrl: "../../icons128.png",
+      title: "Success!",
+      message: "The tests for your latest build for the " + self.props.name + " branch have passed, so congrats!"
+    }, function(id){
+      console.log(id);
+    });
+  },
+  notifyFailed: function(data){
+    var self = this;
+    chrome.notifications.create(self.props.name, {
+      type: "basic",
+      iconUrl: "../../icons128.png",
+      title: "Failed Tests :(",
+      message: "Looks like there was a failed test in the latest build for the " + self.props.name + " branch."
+    }, function(id){
+      console.log(id);
+    });
+  },
   notifyBuild: function(data){
-      chrome.notifications.create(new Date().toTimeString(), {
-        type: "basic",
-        iconUrl: "../../icons/icon128.png",
-        title: "New Running Project",
-        message: new Date().toTimeString()
-      }, function(id){
-        console.log(id);
-      });
+    var self = this;
+    chrome.notifications.create(self.props.name, {
+      type: "basic",
+      iconUrl: "../../icons/icon128.png",
+      title: "New Running Build",
+      message: "A new build has started for the " + self.props.name + " branch."
+    }, function(id){
+      console.log(id);
+    });
   },
   getClasses: function(){
     var classArr = ['branch'];
 
     if(this.props.data.running_builds.length) {
       classArr.push('running');
-      this.notifyBuild(this.props.data.running_builds);
+      this.notifyBuild(this.props.data.running_builds[0]);
+      this.setState({
+        running: true
+      });
       console.log('Running Build:', this.props.data.running_builds);
     } else {
       classArr.push(this.props.data.recent_builds[0].outcome);
+      this.setState({
+        running: false
+      });
     }
 
     return classArr.join(' ');
