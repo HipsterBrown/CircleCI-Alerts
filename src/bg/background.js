@@ -44,7 +44,7 @@ var Branch = React.createClass({
     var self = this;
     chrome.notifications.create(self.props.name, {
       type: "basic",
-      iconUrl: "../../icons128.png",
+      iconUrl: "../../icons/icons128.png",
       title: "Success!",
       message: "The tests for your latest build for the " + self.props.name + " branch have passed, so congrats!"
     }, function(id){
@@ -55,7 +55,7 @@ var Branch = React.createClass({
     var self = this;
     chrome.notifications.create(self.props.name, {
       type: "basic",
-      iconUrl: "../../icons128.png",
+      iconUrl: "../../icons/icons128.png",
       title: "Failed Tests :(",
       message: "Looks like there was a failed test in the latest build for the " + self.props.name + " branch."
     }, function(id){
