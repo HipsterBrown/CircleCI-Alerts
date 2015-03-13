@@ -231,7 +231,6 @@ var App = React.createClass({
       return response.json();
     })
     .then(function(json){
-      console.log(json);
       self.setState({
         projects: json
       });
