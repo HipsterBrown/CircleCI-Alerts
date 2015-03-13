@@ -56,12 +56,12 @@ var Branch = React.createClass({
       message: "The tests for your latest build for the " + self.props.name + " branch have passed, so congrats!"
     }, function(id){
       console.log(id);
-    });
-    chrome.browserAction.setIcon({
-      path: {
-        '19': '../../icons/success19.png',
-        '38': '../../icons/success38.png'
-      }
+      chrome.browserAction.setIcon({
+        path: {
+          '19': '../../icons/success19.png',
+          '38': '../../icons/success38.png'
+        }
+      });
     });
   },
   notifyFailed: function(data){
@@ -76,12 +76,12 @@ var Branch = React.createClass({
       ]
     }, function(id){
       console.log(id);
-    });
-    chrome.browserAction.setIcon({
-      path: {
-        '19': '../../icons/failure19.png',
-        '38': '../../icons/failure38.png'
-      }
+      chrome.browserAction.setIcon({
+        path: {
+          '19': '../../icons/failure19.png',
+          '38': '../../icons/failure38.png'
+        }
+      });
     });
   },
   notifyBuild: function(data){
@@ -93,12 +93,12 @@ var Branch = React.createClass({
       message: "A new build has started for the " + self.props.name + " branch.",
     }, function(id){
       console.log(id);
-    });
-    chrome.browserAction.setIcon({
-      path: {
-        '19': '../../icons/running19.png',
-        '38': '../../icons/running38.png'
-      }
+      chrome.browserAction.setIcon({
+        path: {
+          '19': '../../icons/running19.png',
+          '38': '../../icons/running38.png'
+        }
+      });
     });
   },
   openTab: function(e){
