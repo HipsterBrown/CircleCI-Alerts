@@ -16,6 +16,7 @@ var Branch = React.createClass({
   },
   componentDidMount: function(){
     chrome.notifications.onButtonClicked.addListener(this.handleClick);
+    chrome.notifications.onClicked.addListener(this.openTab);
   },
   componentWillReceiveProps: function(nextProps){
     console.log(nextProps);
@@ -69,7 +70,6 @@ var Branch = React.createClass({
       title: "Failed Tests :(",
       message: "Looks like there was a failed test in the latest build for the " + self.props.name + " branch.",
       buttons: [
-        {title: "See Why"},
         {title: "Rebuild"}
       ]
     }, function(id){
@@ -89,9 +89,6 @@ var Branch = React.createClass({
       iconUrl: "../../icons/running128.png",
       title: "New Running Build",
       message: "A new build has started for the " + self.props.name + " branch.",
-      buttons: [
-        {title: "View Build"}
-      ]
     }, function(id){
       console.log(id);
     });
