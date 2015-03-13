@@ -111,6 +111,7 @@ var Branch = React.createClass({
     }
     if (typeof e === "string") {
       console.log("From clicked...", e);
+      if(e.split('-')[0] !== this.props.name) { return; }
       chrome.tabs.create({
         url: this.getBuildURL(),
         active: false
