@@ -25,6 +25,7 @@ var Branch = React.createClass({
     if(this.props.data.running_builds.length) {
       classArr.push('running');
       this.notifyBuild(this.props.data.running_builds);
+      console.log('Running Build:', this.props.data.running_builds);
     } else {
       classArr.push(this.props.data.recent_builds[0].outcome);
     }
@@ -37,7 +38,11 @@ var Branch = React.createClass({
 
     return D.li({
       className: classes
-    }, this.props.name);
+    }, [
+      D.a({
+        href: this.props.projectURL + '/' + this.props.data.recent_builds[0].build_num
+      }, this.props.name)
+    ]);
   }
 });
 
@@ -81,7 +86,8 @@ var BranchList = React.createClass({
       branches.push(
         React.createElement(Branch, {
           data: branch,
-          name: branch.name
+          name: branch.name,
+          projectURL: self.props.url
         })
       );
     });
@@ -105,10 +111,15 @@ var ProjectList = React.createClass({
       return D.li({
         className: "project"
       }, [
-        D.p({}, project.reponame + " has many branches. Here are yours:"),
+        D.p({}, [
+          D.a({
+            href: "https://circleci.com/gh/" + project.username + "/" + project.reponame
+          }, project.reponame + ":")
+        ]),
         React.createElement(BranchList, {
           branches: project.branches,
-          me: this.props.me
+          me: this.props.me,
+          url: "https://circleci.com/gh/" + project.username + "/" + project.reponame
         })
       ]);
     }, this));

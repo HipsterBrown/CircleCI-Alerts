@@ -9,6 +9,10 @@ h1 {
   font-size: 2em;
 }
 
+a {
+  color: inherit;
+}
+
 .branch {
   padding: 1em 0;
 }
