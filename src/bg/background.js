@@ -112,7 +112,7 @@ var Branch = React.createClass({
     if (typeof e === "string") {
       console.log("From clicked...", e);
       chrome.tabs.create({
-        url: this.getBuildURL(e),
+        url: this.getBuildURL(),
         active: false
       });
     }
