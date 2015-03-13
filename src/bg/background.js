@@ -15,6 +15,7 @@ var Branch = React.createClass({
     };
   },
   componentWillReceiveProps: function(nextProps){
+    console.log(nextProps);
     if(nextProps.data.running_builds.length) {
       this.setState({running: true});
     } else {
@@ -72,7 +73,7 @@ var Branch = React.createClass({
   getClasses: function(){
     var classArr = ['branch'];
 
-    if(this.state.running) {
+    if(this.props.data.running_builds.length) {
       classArr.push('running');
       this.notifyBuild(this.props.data.running_builds[0]);
       console.log('Running Build:', this.props.data.running_builds);
