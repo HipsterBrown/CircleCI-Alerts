@@ -1,3 +1,5 @@
+console.log("Another test.");
+
 chrome.alarms.create('notificationAlarm', {
   when: 1,
   periodInMinutes: 1
